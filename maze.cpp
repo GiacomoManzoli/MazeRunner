@@ -1,12 +1,29 @@
 #include "maze.h"
 #include "block.h"
-#include "coin.h"
+#include "tnt.h"
 
 #include <iostream>
 
 using namespace std;
 
 Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
+    // Caricamento delle texture
+    bmps = new TextureBMP*[TEXTURE_COUNT];
+    bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
+    bmps[FLOOR_TEXTURE] = new TextureBMP("./assets/floor512.bmp");
+    bmps[CEILING_TEXTURE] = new TextureBMP("./assets/ceiling512.bmp");
+    bmps[TNT_TOP_TEXTURE] = new TextureBMP("./assets/tnt_top512.bmp");
+    bmps[TNT_LATERAL_TEXTURE] = new TextureBMP("./assets/tnt_lato512.bmp");
+    
+    textures = new GLuint[TEXTURE_COUNT];
+    glGenTextures(TEXTURE_COUNT, textures); // Crea i nomi per le texture
+    
+    loadTexture(textures[WALL_TEXTURE], bmps[WALL_TEXTURE]);
+    loadTexture(textures[FLOOR_TEXTURE], bmps[FLOOR_TEXTURE]);
+    loadTexture(textures[CEILING_TEXTURE], bmps[CEILING_TEXTURE]);
+    loadTexture(textures[TNT_TOP_TEXTURE], bmps[TNT_TOP_TEXTURE]);
+    loadTexture(textures[TNT_LATERAL_TEXTURE], bmps[TNT_LATERAL_TEXTURE]);
+
     // Allocazione della memoria e costruzione della mappa
     mazeMap = new int*[MAZE_HEIGHT];
     for (int i = 0; i < MAZE_HEIGHT; i++) {
@@ -38,27 +55,16 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
     for (int i = 0; i < MAZE_HEIGHT; i++) {
         for (int j = 0; j < MAZE_WIDTH; j++) {
             if (mazeMap[i][j] == 1) { // 1: tipo muro
-                mazeElements[i][j] = new Block(i,j);
-            } else if (mazeMap[i][j] == 2) { // 1: tipo muro
-                mazeElements[i][j] = new Coin(i,j);
+                mazeElements[i][j] = new Block(i,j, textures[WALL_TEXTURE]);
+            } else if (mazeMap[i][j] == 2) { // 2: tipo TNT
+                mazeElements[i][j] = new TNT(i,j, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE]);
             } else {
                 mazeElements[i][j] = NULL;
             }
         }
     }
 
-    // Caricamento delle texture
-    bmps = new TextureBMP*[TEXTURE_COUNT];
-    bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
-    bmps[FLOOR_TEXTURE] = new TextureBMP("./assets/floor512.bmp");
-    bmps[CEILING_TEXTURE] = new TextureBMP("./assets/ceiling512.bmp");
-    
-    textures = new GLuint[TEXTURE_COUNT];
-    glGenTextures(3, textures); // Crea i nomi per le texture
-    
-    loadTexture(textures[WALL_TEXTURE], bmps[WALL_TEXTURE]);
-    loadTexture(textures[FLOOR_TEXTURE], bmps[FLOOR_TEXTURE]);
-    loadTexture(textures[CEILING_TEXTURE], bmps[CEILING_TEXTURE]);
+   
 };
 
 Maze::~Maze() {
@@ -128,7 +134,6 @@ void Maze::draw() {
     glEnd();
 
     // Disegna i muri 
-    glBindTexture(GL_TEXTURE_2D, textures[WALL_TEXTURE]);
     for (int i = 0; i < MAZE_HEIGHT; i++) {
         for (int j = 0; j < MAZE_WIDTH; j++) {
             if (mazeElements[i][j] != NULL) { 

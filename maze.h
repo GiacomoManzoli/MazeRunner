@@ -23,7 +23,10 @@
 #define WALL_TEXTURE 0
 #define FLOOR_TEXTURE 1
 #define CEILING_TEXTURE 2
-#define TEXTURE_COUNT 3
+#define TNT_LATERAL_TEXTURE 3
+#define TNT_TOP_TEXTURE 4
+
+#define TEXTURE_COUNT 5
 
 class Maze
 {

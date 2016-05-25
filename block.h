@@ -24,11 +24,12 @@
 
 class Block : public MazeObject{
 public:
-    Block(int X, int Z);
+    Block(int X, int Z, int wallTexture);
     virtual void draw();
 private:
     int X;
     int Z;
+    int wallTexture;
 };
 
 #endif
