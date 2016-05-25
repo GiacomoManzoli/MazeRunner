@@ -20,6 +20,12 @@
 #include "maze_object.h"
 #include "textureBMP.h"
 
+#define EMPTY_SPACE 0
+#define WALL_SPACE 1
+#define TNT_SPACE 2
+#define SPAWN_SPACE 3
+#define EXIT_SPACE 4
+
 #define WALL_TEXTURE 0
 #define FLOOR_TEXTURE 1
 #define CEILING_TEXTURE 2
@@ -42,6 +48,7 @@ public:
     Maze();
     ~Maze();
     void draw();
+    bool isWall(int x, int z);
 };
 
 #endif

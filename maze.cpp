@@ -54,17 +54,15 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
     }
     for (int i = 0; i < MAZE_HEIGHT; i++) {
         for (int j = 0; j < MAZE_WIDTH; j++) {
-            if (mazeMap[i][j] == 1) { // 1: tipo muro
+            if (mazeMap[i][j] == WALL_SPACE) { // 1: tipo muro
                 mazeElements[i][j] = new Block(i,j, textures[WALL_TEXTURE]);
-            } else if (mazeMap[i][j] == 2) { // 2: tipo TNT
+            } else if (mazeMap[i][j] == TNT_SPACE) { // 2: tipo TNT
                 mazeElements[i][j] = new TNT(i,j, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE]);
             } else {
                 mazeElements[i][j] = NULL;
             }
         }
     }
-
-   
 };
 
 Maze::~Maze() {
@@ -105,6 +103,17 @@ void Maze::loadTexture(GLuint texture, TextureBMP* bmp){
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     gluBuild2DMipmaps(GL_TEXTURE_2D, 3, bmp->getWidth(), bmp->getHeight(), GL_RGB, GL_UNSIGNED_BYTE, bmp->getData());
+}
+
+bool Maze::isWall(int x, int z) {
+    if (z < 0 || z >= MAZE_HEIGHT || x < 0 || x >= MAZE_WIDTH) { //index out of bound
+        /* I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
+           verificarsi questo caso
+        */
+        return true;
+    }
+    cout <<"MAZE MAP[Z:"<<z<<"][X:"<<x<<"]:"<<mazeMap[z][x] <<endl;
+    return mazeMap[z][x] == WALL_SPACE;
 }
 
 void Maze::draw() {
