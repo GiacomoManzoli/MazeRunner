@@ -3,7 +3,7 @@
 
 # Object files list
 #OBJS = flightsim.o plane.o vector_operations.o
-OBJS = textureBMP.o maze_object.o coin.o block.o maze.o main.o
+OBJS = textureBMP.o maze_object.o tnt.o block.o maze.o main.o
 # Executable name
 EXENAME = a.out
 
@@ -33,8 +33,8 @@ main.o : main.cpp
 	$(CC) $(CCOPTS) main.cpp
 block.o : block.cpp block.h
 	$(CC) $(CCOPTS) block.cpp
-coin.o : coin.cpp coin.h
-	$(CC) $(CCOPTS) coin.cpp
+tnt.o : tnt.cpp tnt.h
+	$(CC) $(CCOPTS) tnt.cpp
 maze.o : maze.cpp maze.h
 	$(CC) $(CCOPTS) maze.cpp
 mazeObject.o : maze_object.cpp maze_object.h
