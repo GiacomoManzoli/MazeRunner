@@ -44,13 +44,18 @@ private:
     GLuint* textures;
     TextureBMP** bmps;
     void loadTexture(GLuint texture, TextureBMP* bmp);
+    int activeTntCount;
+    int tntCount;
+    int mazeTime;
 public:
     Maze();
     ~Maze();
     void draw();
     bool isWall(int x, int z);
-    int tntCount;
-    int activeTntCount;
+    int getMazeTime() {return mazeTime;}; 
+    int getTntCount() {return tntCount;};
+    int getActiveTntCount() {return activeTntCount;};
+    bool deactiveTnt(int x, int z); // Ritorna true se la tnt è stata disinnescata.
 };
 
 #endif

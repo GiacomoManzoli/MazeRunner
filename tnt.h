@@ -22,11 +22,13 @@ public:
     TNT(int X, int Z, int topTexture, int lateralTexture);
     ~TNT();
     virtual void draw();
+    bool deactive(); // ritorna true se la tnt è viene disattivata, false se è già stata disattivata
 private:
     int X;
     int Z;
     int topTexture;
     int lateralTexture;
+    bool active;
 };
 
 #endif

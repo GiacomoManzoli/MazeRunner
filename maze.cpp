@@ -8,10 +8,6 @@ using namespace std;
 
 Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
 
-
-    tntCount = 3;
-    activeTntCount = 2;
-
     // Caricamento delle texture
     bmps = new TextureBMP*[TEXTURE_COUNT];
     bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
@@ -43,6 +39,10 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
         1,2,0,2,1, 
         1,1,1,1,1
     };
+    tntCount = 3;
+    activeTntCount = tntCount;
+    mazeTime = 15;
+
 
     cout << MAZE_WIDTH <<endl;
     for (int i = 0; i < MAZE_HEIGHT; i++) {
@@ -119,6 +119,24 @@ bool Maze::isWall(int x, int z) {
     }
     cout <<"MAZE MAP[Z:"<<z<<"][X:"<<x<<"]:"<<mazeMap[z][x] <<endl;
     return mazeMap[z][x] == WALL_SPACE;
+}
+
+bool Maze::deactiveTnt(int x, int z) {
+    if (z < 0 || z >= MAZE_HEIGHT || x < 0 || x >= MAZE_WIDTH) { //index out of bound
+        /* I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
+           verificarsi questo caso
+        */
+        return false;
+    }
+
+    if (mazeMap[z][x] == TNT_SPACE){
+        TNT* tnt = dynamic_cast<TNT*>(mazeElements[x][z]);
+        if (tnt->deactive()) {
+            activeTntCount--;
+            return true;
+        }
+    } 
+    return false;
 }
 
 void Maze::draw() {

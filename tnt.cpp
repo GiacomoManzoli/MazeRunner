@@ -15,13 +15,24 @@ TNT::TNT(int XX, int ZZ, int tt, int lt){
     Z = ZZ;
     lateralTexture = lt;
     topTexture = tt;
+    active = true;
 }
 
 TNT::~TNT(){
 }
 
+// ritorna true se la tnt è viene disattivata, false se è già stata disattivata
+bool TNT::deactive() {
+    if (active){
+        active = false;
+        return true;
+    }
+    return false;
+};
+
 void TNT::draw() {
-    
+    // Se la tnt è stata disattivata non viene disegnata
+    if (! active) {return;}
     float R = 0.15f;
     glPushMatrix();
     glTranslatef(X, R, Z);
