@@ -49,6 +49,8 @@ public:
     ~Maze();
     void draw();
     bool isWall(int x, int z);
+    int tntCount;
+    int activeTntCount;
 };
 
 #endif

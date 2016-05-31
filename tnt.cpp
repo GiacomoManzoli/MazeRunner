@@ -25,7 +25,17 @@ void TNT::draw() {
     float R = 0.15f;
     glPushMatrix();
     glTranslatef(X, R, Z);
-
+         //materiale
+    GLfloat ambiente[4] = { 1.0f, 1.0f, 1.0f, 1 };
+    GLfloat direttiva[4] = { 1, 1, 1, 1 };
+    GLfloat brillante[4] = { 1, 1, 1, 1 };
+    
+    //glMateriali(GL_FRONT, GL_SHININESS, 32);
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, direttiva);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, brillante);
+    
     glBindTexture(GL_TEXTURE_2D, lateralTexture);
     glBegin(GL_QUADS);
         //Faccia frontale
@@ -99,7 +109,14 @@ void TNT::draw() {
     glEnd();
     
     glBindTexture(GL_TEXTURE_2D, 0);
+           GLfloat ambiente2[4] = { 0.2f,0.2f,0.2f,1 };
+    GLfloat diffuse2[4] = { 0.8f,0.8f,0.8f,1 };
+    GLfloat specular2[4] = { 0.0f,0.0f,0.0f,1 };
+    //glMateriali(GL_FRONT, GL_SHININESS, 32);
     
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
     
     glPopMatrix();
     /*

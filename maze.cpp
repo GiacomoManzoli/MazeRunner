@@ -7,6 +7,11 @@
 using namespace std;
 
 Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
+
+
+    tntCount = 3;
+    activeTntCount = 2;
+
     // Caricamento delle texture
     bmps = new TextureBMP*[TEXTURE_COUNT];
     bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
@@ -127,6 +132,19 @@ void Maze::draw() {
         glTexCord2f con un parametro > 1 ripete la stessa texture
     */
     glBindTexture(GL_TEXTURE_2D, textures[FLOOR_TEXTURE]);
+
+     //materiale
+    GLfloat ambiente[4] = { 1.0f, 1.0f, 1.0f, 1 };
+    GLfloat direttiva[4] = { 1, 1, 1, 1 };
+    GLfloat brillante[4] = { 1, 1, 1, 1 };
+    
+    //glMateriali(GL_FRONT, GL_SHININESS, 32);
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, direttiva);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, brillante);
+    
+
     glBegin(GL_QUADS);
     glNormal3f(0, 1, 0);   
         glTexCoord2f(MAZE_WIDTH -1, 0);
@@ -142,6 +160,14 @@ void Maze::draw() {
         glVertex3f(MAZE_WIDTH -1, 0, MAZE_HEIGHT -1);
     glEnd();
 
+    GLfloat ambiente2[4] = { 0.2f,0.2f,0.2f,1 };
+    GLfloat diffuse2[4] = { 0.8f,0.8f,0.8f,1 };
+    GLfloat specular2[4] = { 0.0f,0.0f,0.0f,1 };
+    //glMateriali(GL_FRONT, GL_SHININESS, 32);
+    
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
     // Disegna i muri 
     for (int i = 0; i < MAZE_HEIGHT; i++) {
         for (int j = 0; j < MAZE_WIDTH; j++) {
@@ -153,6 +179,11 @@ void Maze::draw() {
 
     // Disegna il soffitto
     glBindTexture(GL_TEXTURE_2D, textures[CEILING_TEXTURE]);
+
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, direttiva);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, brillante);
+    
     glBegin(GL_QUADS);
     glNormal3f(0, -1, 0);
         glTexCoord2f(0, 0);
@@ -168,6 +199,9 @@ void Maze::draw() {
         glVertex3f(0, 1.0f, MAZE_HEIGHT -1);
     glEnd();
 
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable( GL_TEXTURE_2D );
 };
