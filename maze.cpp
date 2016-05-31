@@ -42,7 +42,9 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
     tntCount = 3;
     activeTntCount = tntCount;
     mazeTime = 15;
-
+    mazeObserverX = 1;
+    mazeObserverZ = 1;
+    mazeObserverA = -90;
 
     cout << MAZE_WIDTH <<endl;
     for (int i = 0; i < MAZE_HEIGHT; i++) {

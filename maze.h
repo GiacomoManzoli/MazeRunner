@@ -47,6 +47,9 @@ private:
     int activeTntCount;
     int tntCount;
     int mazeTime;
+    int mazeObserverX;
+    int mazeObserverZ;
+    int mazeObserverA;
 public:
     Maze();
     ~Maze();
@@ -56,6 +59,9 @@ public:
     int getTntCount() {return tntCount;};
     int getActiveTntCount() {return activeTntCount;};
     bool deactiveTnt(int x, int z); // Ritorna true se la tnt è stata disinnescata.
+    int getMazeObeserverX() {return mazeObserverX;};
+    int getMazeObeserverZ() {return mazeObserverZ;};
+    int getMazeObeserverA() {return mazeObserverA;};
 };
 
 #endif
