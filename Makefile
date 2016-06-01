@@ -8,10 +8,12 @@ OBJS = textureBMP.o maze_object.o tnt.o block.o maze.o main.o
 EXENAME = a.out
 
 # Macros
-CC = g++
+CC = g++ -std=c++11
 CCOPTS = -c -g -O0 -Wall -Wno-deprecated
 LINK = g++
 LINKOPTS = -o
+
+#g++ -std=c++11 tostring.cpp
 
 all : $(EXENAME)
 
