@@ -17,8 +17,18 @@
     #include <GL/glut.h>
 #endif
 
+using namespace std;
+
 #include "maze_object.h"
 #include "textureBMP.h"
+#include <stdio.h> 
+#include <stdlib.h>
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+#include <iostream>
 
 #define EMPTY_SPACE 0
 #define WALL_SPACE 1
@@ -41,6 +51,7 @@ private:
     MazeObject*** mazeElements; // puntatore a puntatore a puntatore a Block (array bidimensionale di MazeObject*)
     const int MAZE_HEIGHT;
     const int MAZE_WIDTH;
+    const int SETTINGS;
     GLuint* textures;
     TextureBMP** bmps;
     void loadTexture(GLuint texture, TextureBMP* bmp);
@@ -50,9 +61,28 @@ private:
     int mazeObserverX;
     int mazeObserverZ;
     int mazeObserverA;
+    const char * path;
+    const char * local_path;
+    //string line;
+    string righe;
+    string colonne;
+    string bombe;
+    string pos_partenza;
+    string inclinazione;
+    string pos_uscita;
+    int maze_height_ext;
+    int maze_width_ext;
+    int bombeInt;
+    int pos_partenzaInt;
+    int inclinazioneInt;
+    int pos_uscitaInt;
+    string matrice[maze_height_ext*maze_width_ext];
+    int debug_maze_1[maze_height_ext*maze_width_ext];
+
 public:
     Maze();
     ~Maze();
+    Maze(char path);
     void draw();
     bool isWall(int x, int z);
     int getMazeTime() {return mazeTime;}; 
