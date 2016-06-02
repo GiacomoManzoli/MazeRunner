@@ -2,7 +2,6 @@
 #include "block.h"
 #include "tnt.h"
 
-#include <iostream>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -14,6 +13,9 @@ using namespace std;
 
 Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
 
+
+    maze_height_ext=MAZE_HEIGHT;
+    maze_width_ext=MAZE_WIDTH;
     // Caricamento delle texture
     bmps = new TextureBMP*[TEXTURE_COUNT];
     bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
@@ -80,14 +82,17 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
 
 Maze::~Maze() {
     // Deallocazione della mappa
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
+    //for (int i = 0; i < MAZE_HEIGHT; i++) {
+    for (int i = 0; i < maze_height_ext; i++) {
         delete[] mazeMap[i];
     }
     delete[] mazeMap;
 
     // Deallocazione degli elementi della mappa
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
-        for (int j = 0; j < MAZE_WIDTH; j++) {
+    //for (int i = 0; i < MAZE_HEIGHT; i++) {
+    for (int i = 0; i < maze_height_ext; i++) {
+        //for (int j = 0; j < MAZE_WIDTH; j++) {
+        for (int j = 0; j < maze_width_ext; j++) {
             delete mazeElements[i][j];
         }
         delete[] mazeMap[i];
@@ -103,11 +108,11 @@ Maze::~Maze() {
 
 };
 
-Maze::Maze(char path) {
+Maze::Maze(char path): MAZE_HEIGHT(5), MAZE_WIDTH(5) {
 
 
 	//letture delle specifiche dal file ".txt"
-	local_path * = path;
+	*local_path  = path;
 	ifstream file(local_path);
 	getline(file, righe, '\n');
     getline(file, colonne, '\n');
@@ -122,6 +127,7 @@ Maze::Maze(char path) {
     inclinazioneInt = atoi(inclinazione.c_str());
     pos_uscitaInt = atoi(pos_uscita.c_str());
     int ind = 0;
+    string matrice[maze_height_ext*maze_width_ext];
     for(int i=0; i<maze_height_ext; i++) {
         // legge la linea fino a che incontra il carattere '\n'
         getline(file, line, '\n');
@@ -130,6 +136,7 @@ Maze::Maze(char path) {
             ind=ind+1;
         }
     }
+    int debug_maze_1[maze_height_ext*maze_width_ext];
     for(int t=0; t<(maze_height_ext*maze_width_ext); t++) {
         //cout<<matrice[t]<<endl;
         int tem = atoi(matrice[t].c_str());
@@ -159,13 +166,7 @@ Maze::Maze(char path) {
     }
     // L'array deve andare nello heap, non posso fare il trick dell'inizializzazione, quindi le
     // dimensioni sono hard-coded ed è ancora nello stack
-    int debug_maze_1[25] = {
-        1,1,1,1,1, 
-        1,0,0,2,1, 
-        1,0,1,0,1, 
-        1,2,0,2,1, 
-        1,1,1,1,1
-    };
+
     tntCount = 3;
     activeTntCount = tntCount;
     mazeTime = 15;
@@ -215,7 +216,7 @@ void Maze::loadTexture(GLuint texture, TextureBMP* bmp){
 }
 
 bool Maze::isWall(int x, int z) {
-    if (z < 0 || z >= MAZE_HEIGHT || x < 0 || x >= MAZE_WIDTH) { //index out of bound
+    if (z < 0 || z >= maze_height_ext || x < 0 || x >= maze_width_ext) { //index out of bound
         /* I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
            verificarsi questo caso
         */
@@ -226,7 +227,7 @@ bool Maze::isWall(int x, int z) {
 }
 
 bool Maze::deactiveTnt(int x, int z) {
-    if (z < 0 || z >= MAZE_HEIGHT || x < 0 || x >= MAZE_WIDTH) { //index out of bound
+    if (z < 0 || z >= maze_height_ext || x < 0 || x >= maze_width_ext) { //index out of bound
         /* I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
            verificarsi questo caso
         */
@@ -269,17 +270,17 @@ void Maze::draw() {
 
     glBegin(GL_QUADS);
     glNormal3f(0, 1, 0);   
-        glTexCoord2f(MAZE_WIDTH -1, 0);
-        glVertex3f(MAZE_WIDTH -1, 0, 0);
+        glTexCoord2f(maze_width_ext -1, 0);
+        glVertex3f(maze_width_ext -1, 0, 0);
         
         glTexCoord2f(0, 0);
         glVertex3f(0, 0, 0);
         
-        glTexCoord2f(0, MAZE_HEIGHT -1);
-        glVertex3f(0, 0, MAZE_HEIGHT -1);
+        glTexCoord2f(0, maze_height_ext -1);
+        glVertex3f(0, 0, maze_height_ext -1);
         
-        glTexCoord2f(MAZE_WIDTH -1, MAZE_HEIGHT-1);
-        glVertex3f(MAZE_WIDTH -1, 0, MAZE_HEIGHT -1);
+        glTexCoord2f(maze_width_ext -1, maze_height_ext-1);
+        glVertex3f(maze_width_ext -1, 0, maze_height_ext -1);
     glEnd();
 
     GLfloat ambiente2[4] = { 0.2f,0.2f,0.2f,1 };
@@ -291,8 +292,8 @@ void Maze::draw() {
     glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
     // Disegna i muri 
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
-        for (int j = 0; j < MAZE_WIDTH; j++) {
+    for (int i = 0; i < maze_height_ext; i++) {
+        for (int j = 0; j < maze_width_ext; j++) {
             if (mazeElements[i][j] != NULL) { 
                 mazeElements[i][j]->draw();
             } 
@@ -311,14 +312,14 @@ void Maze::draw() {
         glTexCoord2f(0, 0);
         glVertex3f(0, 1.0f, 0);
         
-        glTexCoord2f(MAZE_WIDTH -1, 0);
-        glVertex3f(MAZE_WIDTH -1, 1.0f, 0);
+        glTexCoord2f(maze_width_ext -1, 0);
+        glVertex3f(maze_width_ext -1, 1.0f, 0);
         
-        glTexCoord2f(MAZE_WIDTH-1, MAZE_HEIGHT-1);
-        glVertex3f(MAZE_WIDTH -1, 1.0f, MAZE_HEIGHT -1);
+        glTexCoord2f(maze_width_ext-1, maze_height_ext-1);
+        glVertex3f(maze_width_ext -1, 1.0f, maze_height_ext -1);
         
-        glTexCoord2f(0, MAZE_HEIGHT-1);
-        glVertex3f(0, 1.0f, MAZE_HEIGHT -1);
+        glTexCoord2f(0, maze_height_ext-1);
+        glVertex3f(0, 1.0f, maze_height_ext -1);
     glEnd();
 
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);

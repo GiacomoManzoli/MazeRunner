@@ -61,9 +61,11 @@ private:
     int mazeObserverX;
     int mazeObserverZ;
     int mazeObserverA;
-    const char * path;
-    const char * local_path;
-    //string line;
+    char * path;
+    char * local_path;
+    //char * local_path;
+    //string local_path;
+    string line;
     string righe;
     string colonne;
     string bombe;
@@ -76,8 +78,6 @@ private:
     int pos_partenzaInt;
     int inclinazioneInt;
     int pos_uscitaInt;
-    string matrice[maze_height_ext*maze_width_ext];
-    int debug_maze_1[maze_height_ext*maze_width_ext];
 
 public:
     Maze();
