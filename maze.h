@@ -51,7 +51,7 @@ private:
     MazeObject*** mazeElements; // puntatore a puntatore a puntatore a Block (array bidimensionale di MazeObject*)
     const int MAZE_HEIGHT;
     const int MAZE_WIDTH;
-    const int SETTINGS;
+    //const int SETTINGS;
     GLuint* textures;
     TextureBMP** bmps;
     void loadTexture(GLuint texture, TextureBMP* bmp);
@@ -82,7 +82,7 @@ private:
 public:
     Maze();
     ~Maze();
-    Maze(char path);
+    Maze(char * path);
     void draw();
     bool isWall(int x, int z);
     int getMazeTime() {return mazeTime;}; 

@@ -13,6 +13,7 @@ using namespace std;
 
 Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
 
+    cout<<"VECCHIO COSTRUTTOREEE"<<endl;
 
     maze_height_ext=MAZE_HEIGHT;
     maze_width_ext=MAZE_WIDTH;
@@ -42,7 +43,7 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
     // dimensioni sono hard-coded ed è ancora nello stack
     int debug_maze_1[25] = {
         1,1,1,1,1, 
-        1,0,0,2,1, 
+        1,2,0,2,1, 
         1,0,1,0,1, 
         1,2,0,2,1, 
         1,1,1,1,1
@@ -108,12 +109,14 @@ Maze::~Maze() {
 
 };
 
-Maze::Maze(char path): MAZE_HEIGHT(5), MAZE_WIDTH(5) {
+Maze::Maze(char * path): MAZE_HEIGHT(5), MAZE_WIDTH(5) {
 
 
 	//letture delle specifiche dal file ".txt"
-	*local_path  = path;
-	ifstream file(local_path);
+	//*local_path  = path;
+    //ifstream file(local_path);
+    cout<<"NUOVO COSTRUTTOREEE"<<endl;
+	ifstream file(path);
 	getline(file, righe, '\n');
     getline(file, colonne, '\n');
     getline(file, bombe, '\n');
