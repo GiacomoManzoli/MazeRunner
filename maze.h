@@ -17,8 +17,6 @@
     #include <GL/glut.h>
 #endif
 
-using namespace std;
-
 #include "maze_object.h"
 #include "textureBMP.h"
 #include <stdio.h> 
@@ -49,36 +47,19 @@ class Maze
 private:
     int** mazeMap; // puntatore a puntatore ad interi (array bidimensionale di interi)
     MazeObject*** mazeElements; // puntatore a puntatore a puntatore a Block (array bidimensionale di MazeObject*)
-    const int MAZE_HEIGHT;
-    const int MAZE_WIDTH;
-    //const int SETTINGS;
     GLuint* textures;
     TextureBMP** bmps;
     void loadTexture(GLuint texture, TextureBMP* bmp);
     int activeTntCount;
     int tntCount;
     int mazeTime;
+    int maze_height_ext;
+    int maze_width_ext;
     int mazeObserverX;
     int mazeObserverZ;
     int mazeObserverA;
-    char * path;
-    char * local_path;
-    //char * local_path;
-    //string local_path;
-    string line;
-    string righe;
-    string colonne;
-    string bombe;
-    string pos_partenza;
-    string inclinazione;
-    string pos_uscita;
-    int maze_height_ext;
-    int maze_width_ext;
-    int bombeInt;
-    int pos_partenzaInt;
-    int inclinazioneInt;
-    int pos_uscitaInt;
 
+    
 public:
     Maze();
     ~Maze();

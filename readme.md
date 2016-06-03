@@ -6,7 +6,7 @@ Esplorazione di un labirinto utilizzando OpenGL
 
 ```
 $ make
-$ ./a.out
+$ ./a.out levels/debug1.txt
 ```
 
 # Classi
@@ -15,15 +15,39 @@ $ ./a.out
 - **Maze**: contiene i blocchi che costituiscono il labirinto e le informazioni sugli allarmi
 - **TextureBMP**: classe che rappresenta un immagine BMP dal utilizzare come texture
 
+# Formato file 
+
+```
+#(int)righe mappa
+#(int)colonne mappa
+#(int)bombe mappa
+(int) tempo a disposizione
+(int) coordinata x osservatore
+(int) coordinata z osservatore
+(int) verso visuale
+descrizione mappa
+```
+
+Ad esempio:
+
+```
+3
+6
+1
+12
+1
+1
+-90
+1,1,1,1,1,1, 
+1,0,0,0,2,1,
+1,1,1,1,1,1
+```
+
 # TODO
 
-- Aggiustare Frustum
-- Caricare labirinto da file
 - Aggiungere suoni
-- Aggiungere luce spotlight
-- Aggiungere comandi moviemento camera
-- Aggiungere controllo collisioni
-- ...
+- Correggere luce spotlight
+- Correggere movimenti
 
 # Altro
 

@@ -1,7 +1,3 @@
-#include "maze.h"
-#include "block.h"
-#include "tnt.h"
-
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,15 +5,18 @@
 #include <stdio.h> 
 #include <stdlib.h>
 
+#include "maze.h"
+#include "block.h"
+#include "tnt.h"
+
 using namespace std;
 
-Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
+Maze::Maze() : Maze("levels/debug.txt"){};
 
-    cout<<"VECCHIO COSTRUTTOREEE"<<endl;
-
-    maze_height_ext=MAZE_HEIGHT;
-    maze_width_ext=MAZE_WIDTH;
+Maze::Maze(char* path) {
+    //
     // Caricamento delle texture
+    //
     bmps = new TextureBMP*[TEXTURE_COUNT];
     bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
     bmps[FLOOR_TEXTURE] = new TextureBMP("./assets/floor512.bmp");
@@ -33,51 +32,82 @@ Maze::Maze() : MAZE_HEIGHT(5), MAZE_WIDTH(5){
     loadTexture(textures[CEILING_TEXTURE], bmps[CEILING_TEXTURE]);
     loadTexture(textures[TNT_TOP_TEXTURE], bmps[TNT_TOP_TEXTURE]);
     loadTexture(textures[TNT_LATERAL_TEXTURE], bmps[TNT_LATERAL_TEXTURE]);
+    
+    //
+    // Caricamento dei dati del file
+    //
 
-    // Allocazione della memoria e costruzione della mappa
-    mazeMap = new int*[MAZE_HEIGHT];
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
-        mazeMap[i] = new int[MAZE_WIDTH];
-    }
-    // L'array deve andare nello heap, non posso fare il trick dell'inizializzazione, quindi le
-    // dimensioni sono hard-coded ed è ancora nello stack
-    int debug_maze_1[25] = {
-        1,1,1,1,1, 
-        1,2,0,2,1, 
-        1,0,1,0,1, 
-        1,2,0,2,1, 
-        1,1,1,1,1
-    };
-    tntCount = 3;
+    string line, righe, colonne, bombe, inclinazione;
+
+	ifstream file(path);
+
+    // Dimensioni
+    getline(file, righe, '\n');
+    getline(file, colonne, '\n');
+    maze_height_ext = atoi(righe.c_str());
+    maze_width_ext = atoi(colonne.c_str());
+
+    cout << "DIMENSIONI: RIGHE: " <<maze_height_ext << " COLONNE " <<maze_width_ext << endl;
+    // TNT
+    getline(file, bombe, '\n');
+    tntCount = atoi(bombe.c_str());
     activeTntCount = tntCount;
-    mazeTime = 15;
-    mazeObserverX = 1;
-    mazeObserverZ = 1;
-    mazeObserverA = -90;
+    
+    // Tempo
+    string time_str;
+    getline(file, time_str, '\n');
+    mazeTime = atoi(time_str.c_str());
+    
+    // Posizione osservatore
+    string pos_partenza_x;
+    string pos_partenza_z;
+    getline(file, pos_partenza_x, '\n');
+    getline(file, pos_partenza_z, '\n');
+    getline(file, inclinazione, '\n');
+    mazeObserverX = atoi(pos_partenza_x.c_str());
+    mazeObserverZ = atoi(pos_partenza_z.c_str());
+    mazeObserverA = atoi(inclinazione.c_str());
 
-    cout << MAZE_WIDTH <<endl;
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
-        for (int j = 0; j < MAZE_WIDTH; j++) {
-            mazeMap[i][j] = debug_maze_1[i*MAZE_HEIGHT +j];
-            cout << mazeMap[i][j];
+    
+    // Allocazione della memoria e costruzione per la mappa e i blocchi
+    mazeMap = new int*[maze_height_ext];
+    mazeElements = new MazeObject**[maze_height_ext];
+    for (int i = 0; i < maze_height_ext; i++) {
+        mazeMap[i] = new int[maze_width_ext];
+        mazeElements[i] = new MazeObject*[maze_width_ext];
+    }
+    //
+    //  Lettura e costurzione della mappa
+    //
+    int ind = 0;
+    cout << "MATRICE LETTA" <<endl;
+    for(int i=0; i<maze_height_ext; i++) {
+        // legge la linea fino a che incontra il carattere '\n'
+        getline(file, line, '\n');
+        for(int j=0; j<maze_width_ext*2; j=j+2) {
+            cout << line[j];
+            mazeMap[i][j/2] = ((int)line[j] - 48);
+            ind=ind+1;
         }
         cout << endl;
     }
-    // Allocazione della memoria e costruzione dei blocchi
-    mazeElements = new MazeObject**[MAZE_HEIGHT];
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
-        mazeElements[i] = new MazeObject*[MAZE_WIDTH];
-    }
-    for (int i = 0; i < MAZE_HEIGHT; i++) {
-        for (int j = 0; j < MAZE_WIDTH; j++) {
+    //
+    // Costruzione dei blocchi
+    //
+    for (int i = 0; i < maze_height_ext; i++) { // z
+        for (int j = 0; j < maze_width_ext; j++) { // x
             if (mazeMap[i][j] == WALL_SPACE) { // 1: tipo muro
-                mazeElements[i][j] = new Block(i,j, textures[WALL_TEXTURE]);
+                mazeElements[i][j] = new Block(j,i, textures[WALL_TEXTURE]);
+                cout << "W";
             } else if (mazeMap[i][j] == TNT_SPACE) { // 2: tipo TNT
-                mazeElements[i][j] = new TNT(i,j, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE]);
+                mazeElements[i][j] = new TNT(j,i, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE]);
+                cout << "T";
             } else {
                 mazeElements[i][j] = NULL;
+                cout << "E";
             }
         }
+        cout << endl;
     }
 };
 
@@ -109,99 +139,6 @@ Maze::~Maze() {
 
 };
 
-Maze::Maze(char * path): MAZE_HEIGHT(5), MAZE_WIDTH(5) {
-
-
-	//letture delle specifiche dal file ".txt"
-	//*local_path  = path;
-    //ifstream file(local_path);
-    cout<<"NUOVO COSTRUTTOREEE"<<endl;
-	ifstream file(path);
-	getline(file, righe, '\n');
-    getline(file, colonne, '\n');
-    getline(file, bombe, '\n');
-    getline(file, pos_partenza, '\n');
-    getline(file, inclinazione, '\n');
-    getline(file, pos_uscita, '\n');
-    maze_height_ext = atoi(righe.c_str());
-    maze_width_ext = atoi(colonne.c_str());
-    bombeInt = atoi(bombe.c_str());
-    pos_partenzaInt = atoi(pos_partenza.c_str());
-    inclinazioneInt = atoi(inclinazione.c_str());
-    pos_uscitaInt = atoi(pos_uscita.c_str());
-    int ind = 0;
-    string matrice[maze_height_ext*maze_width_ext];
-    for(int i=0; i<maze_height_ext; i++) {
-        // legge la linea fino a che incontra il carattere '\n'
-        getline(file, line, '\n');
-        for(int j=0; j<maze_width_ext*2; j=j+2) {
-            matrice[ind]=line[j];
-            ind=ind+1;
-        }
-    }
-    int debug_maze_1[maze_height_ext*maze_width_ext];
-    for(int t=0; t<(maze_height_ext*maze_width_ext); t++) {
-        //cout<<matrice[t]<<endl;
-        int tem = atoi(matrice[t].c_str());
-        debug_maze_1[t]=tem;
-    }
-    // Caricamento delle texture
-    bmps = new TextureBMP*[TEXTURE_COUNT];
-    bmps[WALL_TEXTURE] = new TextureBMP("./assets/wall512.bmp");
-    bmps[FLOOR_TEXTURE] = new TextureBMP("./assets/floor512.bmp");
-    bmps[CEILING_TEXTURE] = new TextureBMP("./assets/ceiling512.bmp");
-    bmps[TNT_TOP_TEXTURE] = new TextureBMP("./assets/tnt_top512.bmp");
-    bmps[TNT_LATERAL_TEXTURE] = new TextureBMP("./assets/tnt_lato512.bmp");
-    
-    textures = new GLuint[TEXTURE_COUNT];
-    glGenTextures(TEXTURE_COUNT, textures); // Crea i nomi per le texture
-    
-    loadTexture(textures[WALL_TEXTURE], bmps[WALL_TEXTURE]);
-    loadTexture(textures[FLOOR_TEXTURE], bmps[FLOOR_TEXTURE]);
-    loadTexture(textures[CEILING_TEXTURE], bmps[CEILING_TEXTURE]);
-    loadTexture(textures[TNT_TOP_TEXTURE], bmps[TNT_TOP_TEXTURE]);
-    loadTexture(textures[TNT_LATERAL_TEXTURE], bmps[TNT_LATERAL_TEXTURE]);
-
-    // Allocazione della memoria e costruzione della mappa
-    mazeMap = new int*[maze_height_ext];
-    for (int i = 0; i < maze_height_ext; i++) {
-        mazeMap[i] = new int[maze_width_ext];
-    }
-    // L'array deve andare nello heap, non posso fare il trick dell'inizializzazione, quindi le
-    // dimensioni sono hard-coded ed è ancora nello stack
-
-    tntCount = 3;
-    activeTntCount = tntCount;
-    mazeTime = 15;
-    mazeObserverX = 1;
-    mazeObserverZ = 1;
-    mazeObserverA = -90;
-
-    cout << maze_width_ext <<endl;
-    for (int i = 0; i < maze_height_ext; i++) {
-        for (int j = 0; j < maze_width_ext; j++) {
-            mazeMap[i][j] = debug_maze_1[i*maze_height_ext +j];
-            cout << mazeMap[i][j];
-        }
-        cout << endl;
-    }
-    // Allocazione della memoria e costruzione dei blocchi
-    mazeElements = new MazeObject**[maze_height_ext];
-    for (int i = 0; i < maze_height_ext; i++) {
-        mazeElements[i] = new MazeObject*[maze_width_ext];
-    }
-    for (int i = 0; i < maze_height_ext; i++) {
-        for (int j = 0; j < maze_width_ext; j++) {
-            if (mazeMap[i][j] == WALL_SPACE) { // 1: tipo muro
-                mazeElements[i][j] = new Block(i,j, textures[WALL_TEXTURE]);
-            } else if (mazeMap[i][j] == TNT_SPACE) { // 2: tipo TNT
-                mazeElements[i][j] = new TNT(i,j, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE]);
-            } else {
-                mazeElements[i][j] = NULL;
-            }
-        }
-    }
-};
 
 /*
     Funzione che associa il file BMP ad una texture OpenGL
@@ -225,7 +162,7 @@ bool Maze::isWall(int x, int z) {
         */
         return true;
     }
-    cout <<"MAZE MAP[Z:"<<z<<"][X:"<<x<<"]:"<<mazeMap[z][x] <<endl;
+    //cout <<"MAZE MAP[Z:"<<z<<"][X:"<<x<<"]:"<<mazeMap[z][x] <<endl;
     return mazeMap[z][x] == WALL_SPACE;
 }
 
@@ -236,9 +173,8 @@ bool Maze::deactiveTnt(int x, int z) {
         */
         return false;
     }
-
     if (mazeMap[z][x] == TNT_SPACE){
-        TNT* tnt = dynamic_cast<TNT*>(mazeElements[x][z]);
+        TNT* tnt = dynamic_cast<TNT*>(mazeElements[z][x]);
         if (tnt->deactive()) {
             activeTntCount--;
             return true;
@@ -299,8 +235,10 @@ void Maze::draw() {
         for (int j = 0; j < maze_width_ext; j++) {
             if (mazeElements[i][j] != NULL) { 
                 mazeElements[i][j]->draw();
-            } 
+                cout <<"W";
+            } else { cout << "E";}
         }
+        cout <<endl;
     }
 
     // Disegna il soffitto
