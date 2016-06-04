@@ -63,7 +63,7 @@ private:
 public:
     Maze();
     ~Maze();
-    Maze(char * path);
+    Maze(const char * path);
     void draw();
     bool isWall(int x, int z);
     int getMazeTime() {return mazeTime;}; 

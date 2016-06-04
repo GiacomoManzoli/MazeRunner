@@ -13,7 +13,7 @@ using namespace std;
 
 Maze::Maze() : Maze("levels/debug.txt"){};
 
-Maze::Maze(char* path) {
+Maze::Maze(const char* path) {
     //
     // Caricamento delle texture
     //
