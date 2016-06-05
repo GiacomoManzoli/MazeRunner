@@ -26,7 +26,7 @@ $ ./a.out levels/debug1.txt
 - **TNT**: rappresenta una bomba da disinnescare. Eredita da `MazeObject`.
 - **Maze**: contiene i blocchi che costituiscono il labirinto e le informazioni sulle bombe.
 - **TextureBMP**: classe che rappresenta un immagine BMP dal utilizzare come texture
-- 
+ 
 
 # Formato file 
 
@@ -60,7 +60,6 @@ Ad esempio:
 
 - Aggiungere suoni
 - Correggere luce spotlight
-- Correggere movimenti
 
 # Altro
 
