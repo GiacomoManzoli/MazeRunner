@@ -80,17 +80,29 @@ Maze::Maze(char* path) {
     //  Lettura e costurzione della mappa
     //
     int ind = 0;
+    int contr_TNT = 0;
     cout << "MATRICE LETTA" <<endl;
     for(int i=0; i<maze_height_ext; i++) {
         // legge la linea fino a che incontra il carattere '\n'
         getline(file, line, '\n');
         for(int j=0; j<maze_width_ext*2; j=j+2) {
+            if (line[j]== '2'){
+                contr_TNT = contr_TNT + 1;
+            }
             cout << line[j];
             mazeMap[i][j/2] = ((int)line[j] - 48);
             ind=ind+1;
         }
         cout << endl;
     }
+    //  
+    // Controlli sul file in input
+    //
+    if (contr_TNT != activeTntCount){
+        cout << "ERROR: Numero di TNT errato!!!" <<endl;
+        exit(0);
+    }
+
     //
     // Costruzione dei blocchi
     //
