@@ -8,8 +8,8 @@ OBJS = textureBMP.o maze_object.o tnt.o block.o maze.o main.o
 EXENAME = a.out
 
 # Macros
-CC = g++ -std=c++11
-CCOPTS = -c -g -O0 -Wall -Wno-deprecated
+CC = g++
+CCOPTS = -std=c++11 -c -g -O0 -Wall -Wno-deprecated
 LINK = g++
 LINKOPTS = -o
 
@@ -26,9 +26,17 @@ else
      LIBS = -lGL -lGLU -lglut
 endif
 
+# Librerie audio
+ifeq ($(OS), Darwin)
+    AUDIOLIBS = -framework OpenAL -L/usr/local/Cellar/freealut/1.1.0/lib -lalut
+else
+    AUDIOLIBS = -lopenal -lalut
+endif
+
 # The compiling step
 $(EXENAME) : $(OBJS)
-	$(LINK) $(LINKOPTS) $(EXENAME) $(OBJS) $(LIBS)
+	$(LINK) $(LINKOPTS) $(EXENAME) $(OBJS) $(LIBS) $(AUDIOLIBS)
+
 
 # Object files
 main.o : main.cpp
