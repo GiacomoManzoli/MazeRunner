@@ -1,13 +1,31 @@
 # MazeRunner
 
-Esplorazione di un labirinto utilizzando OpenGL
+Esplorazione di un labirinto sotto forma di un mini-gioco, realizzato utilizzando OpenGL/OpenAL.
+
+## Caratteristiche principali
+
+- Generazione del labirinto a partire da un file di testo. La dimensione del labirinto può essere arbitrariamente grande, l'importante è che il file sia formattato come riportato successivamente.
+- Controllo delle collisioni con gli ostacoli.
+- Gestione del ridimensionamento della finestra per mantenere l'aspect ratio costante.
+- Texture specifiche per i vari elementi
+- Luce dinamica che simula una torcia
+- Minigioco: l'osservatore compare in un punto preciso del labirinto e deve riuscire a disinnescare, passandoci sopra, tutte le bombe presenti entro il tempo limite.
+- HUD che mostra il numero di bombe attive, il tempo rimasto e la direzione dell'osservatore.
+- Gestione dei suoni: utilizzando OpenAL e FreeALUT vengono riprodotti dei suoni quando l'utente disinnesca una bomba e quando la partita si conclude. Inoltre, ogni bomba finché è attiva emette un suono spazializzato per rendere più facile individuarla.
 
 ## Compilazione ed esecuzione
 
 ```
 $ make
-$ ./a.out levels/debug1.txt
+$ ./a.out levels/level1.txt
 ```
+
+Per poter compilare il progetto è necessario che siano presenti le librerie OpenGL/AL e FreeGLUT/ALUT (http://stackoverflow.com/a/3927988).
+
+Il progetto è stato testato su Ubuntu 15.10 e compilato con g++ versione 5.2.1.
+
+Il makefile e gli include permettono di compilare ed eseguire il progetto anche su Mac OS X (10.11 g++ 4.2.1). 
+Tuttavia, la versione di FreeALUT che viene installata su OS X utilizzando Homebrew sembra avere dei problemi e non riproduce correttamente l'audio.
 
 ## Comandi
 
@@ -30,6 +48,8 @@ $ ./a.out levels/debug1.txt
 
 # Formato file 
 
+Per il corretto funzionamento dell'applicazione è necessario che il file contente la descrizione del labirinto sia formattato secondo il seguente schema: 
+
 ```
 (int) #righe mappa
 (int) #colonne mappa
@@ -40,6 +60,14 @@ $ ./a.out levels/debug1.txt
 (int) verso visuale
 descrizione mappa
 ```
+
+E' inoltre richiesto che il perimetro del labirinto sia un muro.
+
+Per la descrizione della mappa è necessario utilizzare la seguente codifica:
+
+- 0: cella vuota
+- 1: muro
+- 2: bomba
 
 Ad esempio:
 
@@ -56,21 +84,3 @@ Ad esempio:
 1,1,1,1,1,1
 ```
 
-# TODO
-
-- Aggiungere suoni
-- Correggere luce spotlight
-
-# Altro
-
-Codice formato labirinto:
-
-- 0: cella vuota
-- 1: muro
-- 2: bomba
-
-Info utili:
-
-- le X crescono verso destra
-- le Z crescono verso "in avanti"
-- in OpenGL gli angoli sono espressi in gradi, la libreria math usa i radianti

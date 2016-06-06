@@ -27,9 +27,9 @@ TNT::TNT(int XX, int ZZ, int tt, int lt, ALuint audioBuffer){
     alSource3f(audioSource, AL_VELOCITY, 0, 0, 0);
     alSourcei(audioSource, AL_LOOPING, AL_TRUE); 
   
-    alSourcef(audioSource, AL_ROLLOFF_FACTOR, 2);//Velocità con cui si attenua
-    alSourcef(audioSource, AL_REFERENCE_DISTANCE, 3); // Distanza entro la quale non c'è attenuazione
-    alSourcef(audioSource, AL_MAX_DISTANCE, 10); // Massima distanza fino alla quale si sente il suono
+    alSourcef(audioSource, AL_ROLLOFF_FACTOR, 3);//Velocità con cui si attenua
+    alSourcef(audioSource, AL_REFERENCE_DISTANCE, 2); // Distanza entro la quale non c'è attenuazione
+    alSourcef(audioSource, AL_MAX_DISTANCE, 5); // Massima distanza fino alla quale si sente il suono
 
     //cout << "Riproduco suono in " << X << " " << Z <<endl;
     alSourcePlay(audioSource);
