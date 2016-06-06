@@ -261,10 +261,8 @@ void Maze::draw() {
         for (int j = 0; j < maze_width_ext; j++) {
             if (mazeElements[i][j] != NULL) { 
                 mazeElements[i][j]->draw();
-                cout <<"W";
-            } else { cout << "E";}
+            }
         }
-        cout <<endl;
     }
 
     // Disegna il soffitto
