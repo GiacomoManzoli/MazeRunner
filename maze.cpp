@@ -248,9 +248,9 @@ void Maze::draw() {
         glVertex3f(maze_width_ext -1, 0, maze_height_ext -1);
     glEnd();
 
-    GLfloat ambiente2[4] = { 0.2f,0.2f,0.2f,1 };
-    GLfloat diffuse2[4] = { 0.8f,0.8f,0.8f,1 };
-    GLfloat specular2[4] = { 0.0f,0.0f,0.0f,1 };
+    GLfloat ambiente2[4] = { 0.2f, 0.2f, 0.2f, 1 };
+    GLfloat diffuse2[4] = { 0.8f, 0.8f, 0.8f, 1 };
+    GLfloat specular2[4] = { 0.0f, 0.0f, 0.0f, 1 };
     //glMateriali(GL_FRONT, GL_SHININESS, 32);
     
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
@@ -292,4 +292,5 @@ void Maze::draw() {
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable( GL_TEXTURE_2D );
+
 };
