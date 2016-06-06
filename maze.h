@@ -7,18 +7,26 @@
     Utilizzare più texture: http://stackoverflow.com/questions/5681948/multiple-textures-opengl-glut-c
 */
 
+// Inclusione di OpenGL/GLUT/ALUT cross platform
 #if defined __APPLE__
     #include <OpenGL/gl.h>
     #include <OpenGL/glu.h>
     #include <GLUT/glut.h>
+    #include <OpenAL/al.h>
+    #include <OpenAL/alc.h>
+    #include "/usr/local/Cellar/freealut/1.1.0/include/AL/alut.h"
 #else
     #include <GL/gl.h>
     #include <GL/glu.h>
     #include <GL/glut.h>
+    #include <AL/al.h>
+    #include <AL/alc.h>
+    #include <AL/alut.h>
 #endif
 
 #include "maze_object.h"
 #include "textureBMP.h"
+#include "tnt.h"
 #include <stdio.h> 
 #include <stdlib.h>
 
@@ -46,7 +54,8 @@ class Maze
 {
 private:
     int** mazeMap; // puntatore a puntatore ad interi (array bidimensionale di interi)
-    MazeObject*** mazeElements; // puntatore a puntatore a puntatore a Block (array bidimensionale di MazeObject*)
+    MazeObject*** mazeElements; // puntatore a puntatore a puntatore a MazeElements (array bidimensionale di MazeObject*)
+    TNT** tnts; // Array di TNT, serve per disattivare i suoni delle tnt quando finisce la partita
     GLuint* textures;
     TextureBMP** bmps;
     void loadTexture(GLuint texture, TextureBMP* bmp);
@@ -58,6 +67,7 @@ private:
     int mazeObserverX;
     int mazeObserverZ;
     int mazeObserverA;
+    ALuint tntAudioBuffer;
 
     
 public:
@@ -73,6 +83,7 @@ public:
     int getMazeObeserverX() {return mazeObserverX;};
     int getMazeObeserverZ() {return mazeObserverZ;};
     int getMazeObeserverA() {return mazeObserverA;};
+    void stopSounds();
 };
 
 #endif

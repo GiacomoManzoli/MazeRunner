@@ -34,9 +34,14 @@ Maze::Maze(const char* path) {
     loadTexture(textures[TNT_LATERAL_TEXTURE], bmps[TNT_LATERAL_TEXTURE]);
     
     //
+    // Caricamento dell'audio per le tnt
+    //
+    string audioFile = "./assets/sounds/tnt-active.wav";
+    tntAudioBuffer = alutCreateBufferFromFile(audioFile.c_str());
+
+    //
     // Caricamento dei dati del file
     //
-
     string line, righe, colonne, bombe, inclinazione;
 
 	ifstream file(path);
@@ -70,6 +75,7 @@ Maze::Maze(const char* path) {
 
     
     // Allocazione della memoria e costruzione per la mappa e i blocchi
+    tnts = new TNT*[tntCount];
     mazeMap = new int*[maze_height_ext];
     mazeElements = new MazeObject**[maze_height_ext];
     for (int i = 0; i < maze_height_ext; i++) {
@@ -80,39 +86,32 @@ Maze::Maze(const char* path) {
     //  Lettura e costurzione della mappa
     //
     int ind = 0;
-    int contr_TNT = 0;
     cout << "MATRICE LETTA" <<endl;
     for(int i=0; i<maze_height_ext; i++) {
         // legge la linea fino a che incontra il carattere '\n'
         getline(file, line, '\n');
         for(int j=0; j<maze_width_ext*2; j=j+2) {
-            if (line[j]== '2'){
-                contr_TNT = contr_TNT + 1;
-            }
             cout << line[j];
             mazeMap[i][j/2] = ((int)line[j] - 48);
             ind=ind+1;
         }
         cout << endl;
     }
-    //  
-    // Controlli sul file in input
-    //
-    if (contr_TNT != activeTntCount){
-        cout << "ERROR: Numero di TNT errato!!!" <<endl;
-        exit(0);
-    }
+   
 
     //
     // Costruzione dei blocchi
     //
+    int contr_TNT = 0;
     for (int i = 0; i < maze_height_ext; i++) { // z
         for (int j = 0; j < maze_width_ext; j++) { // x
             if (mazeMap[i][j] == WALL_SPACE) { // 1: tipo muro
                 mazeElements[i][j] = new Block(j,i, textures[WALL_TEXTURE]);
                 cout << "W";
             } else if (mazeMap[i][j] == TNT_SPACE) { // 2: tipo TNT
-                mazeElements[i][j] = new TNT(j,i, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE]);
+                mazeElements[i][j] = new TNT(j,i, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE], tntAudioBuffer);
+                tnts[contr_TNT] = (TNT*)mazeElements[i][j];
+                contr_TNT = contr_TNT + 1;
                 cout << "T";
             } else {
                 mazeElements[i][j] = NULL;
@@ -120,6 +119,14 @@ Maze::Maze(const char* path) {
             }
         }
         cout << endl;
+    }
+
+    //  
+    // Controlli sul file in input
+    //
+    if (contr_TNT != activeTntCount){
+        cout << "ERROR: Numero di TNT errato!!!" <<endl;
+        exit(0);
     }
 };
 
@@ -148,7 +155,8 @@ Maze::~Maze() {
     }
     delete[] bmps;
     delete[] textures;
-
+    delete[] tnts;
+    alDeleteBuffers(1, &tntAudioBuffer);
 };
 
 
@@ -193,6 +201,12 @@ bool Maze::deactiveTnt(int x, int z) {
         }
     } 
     return false;
+}
+
+void Maze::stopSounds() {
+    for (int i = 0; i < tntCount; i++){
+        tnts[i]->stopSound();
+    }
 }
 
 void Maze::draw() {

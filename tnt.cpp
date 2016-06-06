@@ -10,13 +10,29 @@ using namespace std;
 
 
 
-TNT::TNT(int XX, int ZZ, int tt, int lt){
+TNT::TNT(int XX, int ZZ, int tt, int lt, ALuint audioBuffer){
     //cout <<"Costruita moneta in "<<X << " " <<Z <<endl;
     X = XX;
     Z = ZZ;
     lateralTexture = lt;
     topTexture = tt;
     active = true;
+
+    // Configura e riproduce il suono
+    alGenSources(1, &audioSource);
+    alSourcei(audioSource, AL_BUFFER, audioBuffer);
+    alSourcef(audioSource, AL_PITCH, 1.0f);
+    alSourcef(audioSource, AL_GAIN, 1.0f);
+    alSource3f(audioSource, AL_POSITION, X, 0, Z);
+    alSource3f(audioSource, AL_VELOCITY, 0, 0, 0);
+    alSourcei(audioSource, AL_LOOPING, AL_TRUE); 
+  
+    alSourcef(audioSource, AL_ROLLOFF_FACTOR, 2);//Velocità con cui si attenua
+    alSourcef(audioSource, AL_REFERENCE_DISTANCE, 3); // Distanza entro la quale non c'è attenuazione
+    alSourcef(audioSource, AL_MAX_DISTANCE, 10); // Massima distanza fino alla quale si sente il suono
+
+    //cout << "Riproduco suono in " << X << " " << Z <<endl;
+    alSourcePlay(audioSource);
 }
 
 TNT::~TNT(){
@@ -26,10 +42,20 @@ TNT::~TNT(){
 bool TNT::deactive() {
     if (active){
         active = false;
+        stopSound();
+        alDeleteSources(1, &audioSource);
         return true;
     }
     return false;
 };
+
+void TNT::stopSound() {
+    ALint state;
+    alGetSourcei(audioSource, AL_SOURCE_STATE, &state);
+    if (state == AL_PLAYING) {
+        alSourceStop(audioSource);
+    }
+}
 
 void TNT::draw() {
     // Se la tnt è stata disattivata non viene disegnata
