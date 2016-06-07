@@ -186,7 +186,7 @@ void drawScene() {
     glLoadIdentity();
     
     // Check per vittora o sconfitta.
-    int timeLeft = m->getMazeTime() - ELAPSED_TIME + 4;     //"+4" per mostrare i comandi per 4 s
+    int timeLeft = m->getMazeTime() - ELAPSED_TIME + 1;     //"+4" per mostrare i comandi per 4 s
     if (m->getActiveTntCount() == 0 ) { handleVictory();}
     if (timeLeft == 0) { handleDefeat(); }
 

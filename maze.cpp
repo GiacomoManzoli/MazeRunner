@@ -36,7 +36,8 @@ Maze::Maze(const char* path) {
     //
     // Caricamento dell'audio per le tnt
     //
-    string audioFile = "./assets/sounds/tnt-active.wav";
+    //string audioFile = "./assets/sounds/tnt-active.wav";      
+    string audioFile = "./assets/sounds/sirentone_cut(2).wav";
     tntAudioBuffer = alutCreateBufferFromFile(audioFile.c_str());
 
     //
@@ -221,10 +222,14 @@ void Maze::draw() {
     */
     glBindTexture(GL_TEXTURE_2D, textures[FLOOR_TEXTURE]);
 
-     //materiale
-    GLfloat ambiente[4] = { 1.0f, 1.0f, 1.0f, 1 };
+     //materiale pavimento
+    
+    //GLfloat ambiente[4] = { 1.0f, 1.0f, 1.0f, 1 };  //default
+    GLfloat ambiente[4] = { 0.8f, 0.8f, 0.8f, 1 };
+    //GLfloat direttiva[4] = { 1, 1, 1, 1 };  //default
     GLfloat direttiva[4] = { 1, 1, 1, 1 };
-    GLfloat brillante[4] = { 1, 1, 1, 1 };
+    //GLfloat brillante[4] = { 1, 1, 1, 1 };  //default
+    GLfloat brillante[4] = { 0.1, 0.1, 0.1, 0.1 };
     
     //glMateriali(GL_FRONT, GL_SHININESS, 32);
     
@@ -248,9 +253,13 @@ void Maze::draw() {
         glVertex3f(maze_width_ext -1, 0, maze_height_ext -1);
     glEnd();
 
+
+    // Materiale muri
     GLfloat ambiente2[4] = { 0.2f, 0.2f, 0.2f, 1 };
-    GLfloat diffuse2[4] = { 0.8f, 0.8f, 0.8f, 1 };
-    GLfloat specular2[4] = { 0.0f, 0.0f, 0.0f, 1 };
+    //GLfloat diffuse2[4] = { 0.8f, 0.8f, 0.8f, 1 };         //default
+    GLfloat diffuse2[4] = { 0.7f, 0.7f, 0.7f, 1 };         
+    //GLfloat specular2[4] = { 0.0f, 0.0f, 0.0f, 1 };      //default
+    GLfloat specular2[4] = { 0.1f, 0.1f, 0.1f, 1 };
     //glMateriali(GL_FRONT, GL_SHININESS, 32);
     
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
@@ -268,9 +277,12 @@ void Maze::draw() {
     // Disegna il soffitto
     glBindTexture(GL_TEXTURE_2D, textures[CEILING_TEXTURE]);
 
+    //Materiale soffitto
+    GLfloat brillanteS[4] = { 1, 1, 1, 1 };
+
     glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
     glMaterialfv(GL_FRONT, GL_DIFFUSE, direttiva);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, brillante);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, brillanteS);
     
     glBegin(GL_QUADS);
     glNormal3f(0, -1, 0);
