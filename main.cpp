@@ -412,14 +412,15 @@ void initLight() {
     // Configurazione torcia
     // #####################
     //GLfloat torchLight[4] = { 1.0f, 1.0f, 1.0f, 1 };  //default
-    GLfloat torchLight[4] = { 0.1f, 0.1f, 0.1f, 1 };
+    GLfloat torchLight[4] = { 1.0f, 1.0f, 1.0f, 1 };
     glLightfv(GL_LIGHT0, GL_AMBIENT, torchLight);
     
-    glLightf(GL_LIGHT0,GL_SPOT_CUTOFF, 60.0f);
-    glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,0.0f);
+    glLightf(GL_LIGHT0,GL_SPOT_CUTOFF, 35.0f);
+    glLightf(GL_LIGHT0,GL_SPOT_EXPONENT,4.0f);
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.2f);
     
 
-    GLfloat torchPosition[4] = { 0.0f, 0.5f, 1.0f, 1.0f };
+    GLfloat torchPosition[4] = { 0.0f, 0.2f, 1.0f, 1.0f };
     glLightfv(GL_LIGHT0, GL_POSITION, torchPosition);
     GLfloat light_direction[] = { 0,0,-1};
     glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION,light_direction);
@@ -484,6 +485,7 @@ void initAudio(){
     alSourcef(pick_up_sound_source, AL_REFERENCE_DISTANCE, 2); // Distanza entro la quale non c'è attenuazione
     alSourcef(pick_up_sound_source, AL_MAX_DISTANCE, 3); // Massima distanza fino alla quale si sente il suono
 }
+
 int main(int argc, char **argv) {
     // Array che specifica quali tasti sono premuti nel caso l'utente prema
     // più tasti contemporaneamente.

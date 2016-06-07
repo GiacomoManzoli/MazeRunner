@@ -14,6 +14,14 @@ Block::Block(int XX, int ZZ, int wt){
 
 void Block::draw() {
     //cout << "Drawing " <<X <<" " <<Z <<endl;
+    GLfloat ambient[4] = { 0.2f, 0.2f, 0.2f, 1 };
+    GLfloat diffuse[4] = { 0.7f, 0.7f, 0.7f, 1 };         
+    GLfloat specular[4] = { 0.1f, 0.1f, 0.1f, 1 };
+    glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+
+
     glBindTexture(GL_TEXTURE_2D, wallTexture);
     glBegin(GL_QUADS);
     

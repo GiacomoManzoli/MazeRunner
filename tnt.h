@@ -17,15 +17,15 @@
     #include <AL/alut.h>
 #endif
 
-#include "maze_object.h"
+#include "empty_space.h"
 
-class TNT: public MazeObject {
+class TNT: public EmptySpace {
 public:
     // topTexture e lateralTextur sono i nomi OpenGL delle texture da usare.
     // In questo modo le texture da usare vengono decise dal labirinto.
     // Inoltre, le texture vengono caricate una sola volta e vanno bene per tutti
     // gli oggetti di questo tipo.
-    TNT(int X, int Z, int topTexture, int lateralTexture, ALuint buffer);
+    TNT(int X, int Z, int floorTexture, int ceilTexture, int topTexture, int lateralTexture, ALuint buffer);
     ~TNT();
     virtual void draw();
     bool deactive(); // ritorna true se la tnt è viene disattivata, false se è già stata disattivata

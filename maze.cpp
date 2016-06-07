@@ -7,6 +7,7 @@
 
 #include "maze.h"
 #include "block.h"
+#include "empty_space.h"
 #include "tnt.h"
 
 using namespace std;
@@ -110,12 +111,12 @@ Maze::Maze(const char* path) {
                 mazeElements[i][j] = new Block(j,i, textures[WALL_TEXTURE]);
                 cout << "W";
             } else if (mazeMap[i][j] == TNT_SPACE) { // 2: tipo TNT
-                mazeElements[i][j] = new TNT(j,i, textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE], tntAudioBuffer);
+                mazeElements[i][j] = new TNT(j,i,textures[FLOOR_TEXTURE], textures[CEILING_TEXTURE], textures[TNT_TOP_TEXTURE], textures[TNT_LATERAL_TEXTURE], tntAudioBuffer);
                 tnts[contr_TNT] = (TNT*)mazeElements[i][j];
                 contr_TNT = contr_TNT + 1;
                 cout << "T";
             } else {
-                mazeElements[i][j] = NULL;
+                mazeElements[i][j] = new EmptySpace(j,i, textures[FLOOR_TEXTURE], textures[CEILING_TEXTURE]);
                 cout << "E";
             }
         }
@@ -220,51 +221,8 @@ void Maze::draw() {
 
         glTexCord2f con un parametro > 1 ripete la stessa texture
     */
-    glBindTexture(GL_TEXTURE_2D, textures[FLOOR_TEXTURE]);
 
-     //materiale pavimento
-    
-    //GLfloat ambiente[4] = { 1.0f, 1.0f, 1.0f, 1 };  //default
-    GLfloat ambiente[4] = { 0.8f, 0.8f, 0.8f, 1 };
-    //GLfloat direttiva[4] = { 1, 1, 1, 1 };  //default
-    GLfloat direttiva[4] = { 1, 1, 1, 1 };
-    //GLfloat brillante[4] = { 1, 1, 1, 1 };  //default
-    GLfloat brillante[4] = { 0.1, 0.1, 0.1, 0.1 };
-    
-    //glMateriali(GL_FRONT, GL_SHININESS, 32);
-    
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, direttiva);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, brillante);
-    
-
-    glBegin(GL_QUADS);
-    glNormal3f(0, 1, 0);   
-        glTexCoord2f(maze_width_ext -1, 0);
-        glVertex3f(maze_width_ext -1, 0, 0);
-        
-        glTexCoord2f(0, 0);
-        glVertex3f(0, 0, 0);
-        
-        glTexCoord2f(0, maze_height_ext -1);
-        glVertex3f(0, 0, maze_height_ext -1);
-        
-        glTexCoord2f(maze_width_ext -1, maze_height_ext-1);
-        glVertex3f(maze_width_ext -1, 0, maze_height_ext -1);
-    glEnd();
-
-
-    // Materiale muri
-    GLfloat ambiente2[4] = { 0.2f, 0.2f, 0.2f, 1 };
-    //GLfloat diffuse2[4] = { 0.8f, 0.8f, 0.8f, 1 };         //default
-    GLfloat diffuse2[4] = { 0.7f, 0.7f, 0.7f, 1 };         
-    //GLfloat specular2[4] = { 0.0f, 0.0f, 0.0f, 1 };      //default
-    GLfloat specular2[4] = { 0.1f, 0.1f, 0.1f, 1 };
-    //glMateriali(GL_FRONT, GL_SHININESS, 32);
-    
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
+   
     // Disegna i muri 
     for (int i = 0; i < maze_height_ext; i++) {
         for (int j = 0; j < maze_width_ext; j++) {
@@ -274,34 +232,6 @@ void Maze::draw() {
         }
     }
 
-    // Disegna il soffitto
-    glBindTexture(GL_TEXTURE_2D, textures[CEILING_TEXTURE]);
-
-    //Materiale soffitto
-    GLfloat brillanteS[4] = { 1, 1, 1, 1 };
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, direttiva);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, brillanteS);
-    
-    glBegin(GL_QUADS);
-    glNormal3f(0, -1, 0);
-        glTexCoord2f(0, 0);
-        glVertex3f(0, 1.0f, 0);
-        
-        glTexCoord2f(maze_width_ext -1, 0);
-        glVertex3f(maze_width_ext -1, 1.0f, 0);
-        
-        glTexCoord2f(maze_width_ext-1, maze_height_ext-1);
-        glVertex3f(maze_width_ext -1, 1.0f, maze_height_ext -1);
-        
-        glTexCoord2f(0, maze_height_ext-1);
-        glVertex3f(0, 1.0f, maze_height_ext -1);
-    glEnd();
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT, ambiente2);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse2);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular2);
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable( GL_TEXTURE_2D );
 
