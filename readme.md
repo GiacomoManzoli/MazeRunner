@@ -39,9 +39,10 @@ Tuttavia, la versione di FreeALUT che viene installata su OS X utilizzando [Home
 
 ## Classi
 
-- **MazeObject**: classe astratta che rappresenta un elemento grafico che compare nel labiritino
+- **MazeObject**: classe astratta che rappresenta un elemento grafico che compare nel labiritino.
+- **EmptySpace**: classe che rappresenta una cella del labirinto in cui l'utente può spostarsi. Disegna una parte del soffitto e del pavimento. È stato necessario spezzare il soffitto e il pavimento in più parti a causa di alcuni problemi della libreria OpenGL nel calcolare correttamente l'illuminazione di superfici grandi.
 - **Block**: posiziona un cubo di dimensioni 1.0fx1.0f a partire da un determinato punto. Il blocco in posizione (0,0) ha centro in (X: 0, Y:0.5, Z:0). Eredita da `MazeObject`.
-- **TNT**: rappresenta una bomba da disinnescare. Eredita da `MazeObject`.
+- **TNT**: rappresenta una bomba da disinnescare. Eredita da `EmptySpace`.
 - **Maze**: contiene i blocchi che costituiscono il labirinto e le informazioni sulle bombe.
 - **TextureBMP**: classe che rappresenta un immagine BMP dal utilizzare come texture
  
