@@ -38,7 +38,7 @@ Maze::Maze(const char* path) {
     // Caricamento dell'audio per le tnt
     //
     //string audioFile = "./assets/sounds/tnt-active.wav";      
-    string audioFile = "./assets/sounds/sirentone_cut(2).wav";
+    string audioFile = "./assets/sounds/sirentone_cut_mono.wav";
     tntAudioBuffer = alutCreateBufferFromFile(audioFile.c_str());
 
     //
