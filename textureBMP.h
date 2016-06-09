@@ -1,3 +1,7 @@
+/*
+	textureBMP.h - Classe che rappresenta un'immagine BMP da utilizzare
+	come texture
+*/
 #ifndef TEXTURE_BMP_H
 #define TEXTURE_BMP_H
 

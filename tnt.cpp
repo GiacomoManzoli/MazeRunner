@@ -9,7 +9,6 @@
 using namespace std;
 
 TNT::TNT(int XX, int ZZ, int ft, int ct, int tt, int lt, ALuint audioBuffer) : EmptySpace(XX,ZZ,ft,ct){
-    //cout <<"Costruita moneta in "<<X << " " <<Z <<endl;
     X = XX;
     Z = ZZ;
     lateralTexture = lt;

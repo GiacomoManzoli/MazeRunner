@@ -10,10 +10,10 @@ TextureBMP::TextureBMP(const char* imagePath) {
     unsigned char header[54];
     unsigned int imageSize;   // = width*height*3
 
-    // Open the file
+    // Apre il file
     FILE * file = fopen(imagePath,"rb");
     if (!file){printf("Immagine non trovata\n"); return;}
-    if ( fread(header, 1, 54, file)!=54 ){ // If not 54 bytes read : problem
+    if ( fread(header, 1, 54, file)!=54 ){ // Controlla che l'header sia di 54 byte
         printf("Header BMP errato\n");
         data = NULL;
         return;

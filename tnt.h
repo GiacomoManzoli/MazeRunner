@@ -1,3 +1,6 @@
+/*
+    tnt.h - Classe che rappresenta una tnt all'interno del labirinto
+*/
 #ifndef TNT_H
 #define TNT_H
 
@@ -20,8 +23,10 @@
 #include "empty_space.h"
 
 class TNT: public EmptySpace {
+    // Eredita da EmptySpace perché una volta distattivata la TNT questa scompare
+    // e nel labirinto rimane uno spazio vuoto
 public:
-    // topTexture e lateralTextur sono i nomi OpenGL delle texture da usare.
+    // topTexture e lateralTexture sono i nomi OpenGL delle texture da usare.
     // In questo modo le texture da usare vengono decise dal labirinto.
     // Inoltre, le texture vengono caricate una sola volta e vanno bene per tutti
     // gli oggetti di questo tipo.

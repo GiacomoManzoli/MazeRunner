@@ -1,7 +1,7 @@
 /*
     main.cpp - Entry point dell'applicazione.
 
-    Configurazione dell'ambiente OpenGl
+    Configurazione dell'ambiente OpenGL/OpenAL
  */
 
 #include <stdio.h>
@@ -95,6 +95,10 @@ void handleResize(int ww, int wh) {
     }
     VIEWPORT_HEIGHT = vh;
     VIEWPORT_WIDTH = vw;
+    /*
+        Imposta un Viewport quadrato che occupa il massimo spazio possibile
+        della finestra. Lo spazio inutilizzato viene lasciato nero.
+    */
     glViewport(x, y, vw, vh);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -110,7 +114,8 @@ void handleResize(int ww, int wh) {
 }   
 
 /*
-    Ottiene l'orientamento in termini di "coordinate geografiche" a partire dall'angolo globale
+    Ottiene l'orientamento in termini di "coordinate geografiche" a partire 
+    dall'angolo globale
 */
 string getDirection() {
     int a = (int)A % 360;
@@ -180,18 +185,18 @@ void drawText(float x, float y, string text, float bckWidth, float bckHeight, fl
 void drawScene() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable( GL_BLEND );
+    glEnable( GL_BLEND ); // Blending per l'HUD semi-trasparente
     glMatrixMode(GL_MODELVIEW);
     if (!GAME_ACTIVE) return; // evita che venga chiamato più volte
     glLoadIdentity();
     
     // Check per vittora o sconfitta.
-    int timeLeft = m->getMazeTime() - ELAPSED_TIME + 1;     //"+4" per mostrare i comandi per 4 s
+    int timeLeft = m->getMazeTime() - ELAPSED_TIME + 1; //"+1" per mostrare i comandi per 1 s
     if (m->getActiveTntCount() == 0 ) { handleVictory();}
     if (timeLeft == 0) { handleDefeat(); }
 
     if (timeLeft > m->getMazeTime()){
-        //drawText(x, y, testo, larghezza, altezza, margine)
+        // Mostra i comandi per il primo secondo della partita
         string comandi = "   COMANDI DEL GIOCO: ";
         string comandi1 = "w:    Avanti";
         string comandi2 = "s:    Indietro";
@@ -302,7 +307,6 @@ void handleKeyDown(unsigned char key, int , int ) {
         cout << "TNT disattivata in "<< x << " " << z <<endl; 
         playSoundAtPosition(pick_up_sound_source,X,Y,Z);
     }
-
     glutPostRedisplay();
 }
 
@@ -353,6 +357,7 @@ void handleVictory() {
 
     ALint state;
     alGetSourcei(victory_sound_source, AL_SOURCE_STATE, &state);
+    // Controlla che il suono della vittoria non sia già in riproduzione
     if (state != AL_PLAYING) {
         m->stopSounds();
         // Riproduce il suono che da gloria al vincitore
@@ -362,8 +367,6 @@ void handleVictory() {
 
 void handleDefeat() {
     GAME_ACTIVE = false;
-    // TODO: riproduci un suono di un esplosione
-    // Disegna le informazioni
     float margin = 20;
     string text = "HAI PERSO!";
 
@@ -378,6 +381,7 @@ void handleDefeat() {
 
     ALint state;
     alGetSourcei(explosion_sound_source, AL_SOURCE_STATE, &state);
+    // Controlla che il suono della sconfitta non sia già in riproduzione
     if (state != AL_PLAYING) {
         m->stopSounds();
         // Riproduce il suono di un esplosione
@@ -405,13 +409,11 @@ void initLight() {
     // #####################
     // Configurazione luce ambientale
     // #####################
-    //GLfloat ambientLight[4] = { 0.3f, 0.3f, 0.3f, 1 };    //default
     GLfloat ambientLight[4] = { 0.08f, 0.08f, 0.08f, 1 };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
     // #####################
     // Configurazione torcia
     // #####################
-    //GLfloat torchLight[4] = { 1.0f, 1.0f, 1.0f, 1 };  //default
     GLfloat torchLight[4] = { 1.0f, 1.0f, 1.0f, 1 };
     glLightfv(GL_LIGHT0, GL_AMBIENT, torchLight);
     
@@ -434,13 +436,15 @@ void playSoundAtPosition(ALuint source, float x, float y, float z){
 
 void initAudio(){
     // tutte le sorgenti di default emettono a 360 gradi
-    ALCdevice* device = alcOpenDevice(NULL);
-    ALCcontext* context = alcCreateContext(device, NULL);
+    device = alcOpenDevice(NULL);
+    context = alcCreateContext(device, NULL);
     alcMakeContextCurrent(context);
 
     alDistanceModel(AL_INVERSE_DISTANCE_CLAMPED);
 
     alListener3f(AL_VELOCITY, 0, 0, 0); // Velocità osservatore
+    // Per far si che i suoni vengano spazializzati correttamente
+    // devono essere suoni stereo
 
     // esplosione fnale
     alGenSources(1, &explosion_sound_source);
@@ -505,7 +509,7 @@ int main(int argc, char **argv) {
     
     glEnable(GL_DEPTH_TEST);
     glClearColor(0, 0, 0, 1.0f);
-    glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE); // Non renderizza le facce interne
     
     initLight();
     
@@ -519,8 +523,8 @@ int main(int argc, char **argv) {
     glutDisplayFunc(drawScene);
 
     //Lettura delle specifiche dello schema dal file ".txt" passato come paramentro
-    cout<<"prima lettura specifiche"<<endl;
-    cout <<"argc " <<argc <<endl;
+    //cout<<"prima lettura specifiche"<<endl;
+    //cout <<"argc " <<argc <<endl;
     if (argc==1){
         m = new Maze("levels/debug1.txt");
     }

@@ -134,14 +134,12 @@ Maze::Maze(const char* path) {
 
 Maze::~Maze() {
     // Deallocazione della mappa
-    //for (int i = 0; i < MAZE_HEIGHT; i++) {
     for (int i = 0; i < maze_height_ext; i++) {
         delete[] mazeMap[i];
     }
     delete[] mazeMap;
 
     // Deallocazione degli elementi della mappa
-    //for (int i = 0; i < MAZE_HEIGHT; i++) {
     for (int i = 0; i < maze_height_ext; i++) {
         //for (int j = 0; j < MAZE_WIDTH; j++) {
         for (int j = 0; j < maze_width_ext; j++) {
@@ -179,8 +177,9 @@ void Maze::loadTexture(GLuint texture, TextureBMP* bmp){
 
 bool Maze::isWall(int x, int z) {
     if (z < 0 || z >= maze_height_ext || x < 0 || x >= maze_width_ext) { //index out of bound
-        /* I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
-           verificarsi questo caso
+        /* 
+            I labirinti sono costruiti con tutto il muro in torno,
+            quindi non dovrebbe mai verificarsi questo caso
         */
         return true;
     }
@@ -190,14 +189,15 @@ bool Maze::isWall(int x, int z) {
 
 bool Maze::deactiveTnt(int x, int z) {
     if (z < 0 || z >= maze_height_ext || x < 0 || x >= maze_width_ext) { //index out of bound
-        /* I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
-           verificarsi questo caso
+        /* 
+            I labirinti sono costruiti con tutto il muro in torno, quindi non dovrebbe mai
+            verificarsi questo caso
         */
         return false;
     }
     if (mazeMap[z][x] == TNT_SPACE){
         TNT* tnt = dynamic_cast<TNT*>(mazeElements[z][x]);
-        if (tnt->deactive()) {
+        if (tnt->deactive()) { // Se ritorna false la tnt è già stata disinnescata
             activeTntCount--;
             return true;
         }
@@ -213,17 +213,8 @@ void Maze::stopSounds() {
 
 void Maze::draw() {
     glEnable( GL_TEXTURE_2D );
-    // Disegna il paviemento
-    /*
-        Sia il pavimento che il soffitto vengono tracciati fino a MAZE_WIDTH-1, 
-        ovvero dal centro del primo cubo, al centro dell'ultimo cubo, sia della
-        riga che della colonna.
-
-        glTexCord2f con un parametro > 1 ripete la stessa texture
-    */
-
    
-    // Disegna i muri 
+    // Disegna gli elementi del labirinto
     for (int i = 0; i < maze_height_ext; i++) {
         for (int j = 0; j < maze_width_ext; j++) {
             if (mazeElements[i][j] != NULL) { 

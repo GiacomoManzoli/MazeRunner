@@ -36,12 +36,12 @@
 #include <math.h>
 #include <iostream>
 
+// Codici mappa
 #define EMPTY_SPACE 0
 #define WALL_SPACE 1
 #define TNT_SPACE 2
-#define SPAWN_SPACE 3
-#define EXIT_SPACE 4
 
+// Id delle texture per OpenGL
 #define WALL_TEXTURE 0
 #define FLOOR_TEXTURE 1
 #define CEILING_TEXTURE 2

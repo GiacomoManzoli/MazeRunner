@@ -1,5 +1,6 @@
 /*
-    block.h - Rappresenta un blocco che costituisce una parete del labirinto
+    empty_space.h - Rappresenta un riquadro del labirinto in cui 
+    l'osservatore può muoversi.
 */
 
 #ifndef EMPTY_SPACE_H
@@ -18,9 +19,6 @@
 #include "maze_object.h"
 
 #define HALF_BLOCK_SIZE 0.5f // Metà della dimensione di un blocco
-/*
-    Il blocco ha come centro le coordinate X,Z specificate. La Y della parte bassa è 0, mentre la parte alta è 2*HALF_BLOCK_SIZE
-*/
 
 class EmptySpace : public MazeObject{
 public:
